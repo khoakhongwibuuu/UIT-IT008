@@ -21,11 +21,22 @@ namespace LAB01_IT008
 
     static class InputHelper
     {
-        static public int ParseInput(string message, bool allowZero, bool allowNegative)
+        /**
+         * Hàm nhập và kiểm tra tính hợp lệ của số nguyên từ người dùng
+         * @param message: Câu nhắc người dùng
+         * @param allowZero: Cho phép nhập số 0
+         * @param allowNegative: Cho phép nhập số âm
+         * @param callback: Có phải gọi đệ quy (không in message)
+         * @param minAllowed: Giới hạn dưới
+         * @param maxAllowed: Giới hạn trên
+         * @return Số nguyên hợp lệ đã nhập
+         */
+        static public int ParseInput(string message, bool allowZero, bool allowNegative, bool callback = false, int minAllowed = int.MinValue, int maxAllowed = int.MaxValue)
         {
             int value = 0;
             string? input = "";
-            Console.Write(message);
+            if (!callback)
+                Console.Write(message);
             input = Console.ReadLine();
             while (!int.TryParse(input ?? string.Empty, out value))
             {
@@ -37,14 +48,21 @@ namespace LAB01_IT008
             {
                 Console.WriteLine("Input khong duoc bang 0. Hay nhap lai.\n");
                 Console.Write(message);
-                return ParseInput(message, allowZero, allowNegative);
+                return ParseInput(message, allowZero, allowNegative, true, minAllowed, maxAllowed);
             }
             if (!allowNegative && value < 0)
             {
                 Console.WriteLine("Input khong duoc la so am. Hay nhap lai.\n");
                 Console.Write(message);
-                return ParseInput(message, allowZero, allowNegative);
+                return ParseInput(message, allowZero, allowNegative, true, minAllowed, maxAllowed);
             }
+            if (value < minAllowed || value > maxAllowed)
+            {
+                Console.WriteLine($"Input nam ngoai khoang gia tri quy dinh. Hay nhap lai trong khoang [{minAllowed}, {maxAllowed}].\n");
+                Console.Write(message);
+                return ParseInput(message, allowZero, allowNegative, true, minAllowed, maxAllowed);
+            }
+            
             return value;
         }
     }
@@ -257,20 +275,21 @@ namespace LAB01_IT008
             return true;
         }
 
-        public void Print() => Console.WriteLine("{0}/{1}/{2}", day, month, year);
+        public string PrintStr() => $"{day}/{month}/{year}";
+        public string PrintSemiStr() => $"{month}/{year}";
 
         public void Input()
         {
-            day = InputHelper.ParseInput("Nhap ngay: ", false, false);
-            month = InputHelper.ParseInput("Nhap thang: ", false, false);
-            year = InputHelper.ParseInput("Nhap nam: ", false, false);
+            day = InputHelper.ParseInput("Nhap ngay: ", false, false, false, 1, 31);
+            month = InputHelper.ParseInput("Nhap thang: ", false, false, false, 1, 12);
+            year = InputHelper.ParseInput("Nhap nam: ", false, false, false, 1);
         }
 
         public void SemiInput()
         {
             day = 1;
-            month = InputHelper.ParseInput("Nhap thang: ", false, false);
-            year = InputHelper.ParseInput("Nhap nam: ", false, false);
+            month = InputHelper.ParseInput("Nhap thang: ", false, false, false, 1, 12);
+            year = InputHelper.ParseInput("Nhap nam: ", false, false, false, 1);
         }
 
         public int daysInMonthCount() => DaysInMonth(month, year);
@@ -325,7 +344,7 @@ namespace LAB01_IT008
 
         static public int exec()
         {
-            Console.WriteLine("============Running BAI01 subtask============");
+            Console.WriteLine("\n\n============Running BAI01 subtask============");
             int n = InputHelper.ParseInput("Nhap so nguyen duong n: ", false, false);
             int[] arr = new int[n];
             for (int i = 0; i < n; i++)
@@ -359,7 +378,7 @@ namespace LAB01_IT008
 
         static public int exec()
         {
-            Console.WriteLine("============Running BAI02 subtask============");
+            Console.WriteLine("\n\n============Running BAI02 subtask============");
             int n = InputHelper.ParseInput("Nhap so nguyen duong n: ", false, false);
 
             Console.WriteLine("Tong cac so nguyen to < n: " + sumPrimeLessThanN(n));
@@ -371,17 +390,16 @@ namespace LAB01_IT008
     {
         static public int exec()
         {
-            Console.WriteLine("============Running BAI03 subtask============");
+            Console.WriteLine("\n\n============Running BAI03 subtask============");
             Date date = new Date(-1, -1, -1);
             date.Input();
             if (date.isValid())
             {
-                Console.Write("Ngay hop le: ");
-                date.Print();
+                Console.WriteLine("Ngay " + date.PrintStr() + " hop le.");
             }
             else
             {
-                Console.WriteLine("Ngay khong hop le.");
+                Console.WriteLine("Ngay " + date.PrintStr() + " khong hop le.");
             }
             return 0;
         }
@@ -391,7 +409,7 @@ namespace LAB01_IT008
     {
         static public int exec()
         {
-            Console.WriteLine("============Running BAI04 subtask============");
+            Console.WriteLine("\n\n============Running BAI04 subtask============");
             Date date = new Date(-1, -1, -1);
             date.SemiInput();
             if (date.isValid())
@@ -400,7 +418,8 @@ namespace LAB01_IT008
             }
             else
             {
-                Console.WriteLine("Khong hop le.");
+                // This never gonna happens 
+                Console.WriteLine("Thang " + date.PrintSemiStr() + " khong hop le.");
             }
             return 0;
         }
@@ -410,16 +429,16 @@ namespace LAB01_IT008
     {
         static public int exec()
         {
-            Console.WriteLine("============Running BAI05 subtask============");
+            Console.WriteLine("\n\n============Running BAI05 subtask============");
             Date date = new Date(-1, -1, -1);
             date.Input();
             if (date.isValid())
             {
-                Console.WriteLine("Hom do la: " + date.dayOfWeek());
+                Console.WriteLine("Ngay " + date.PrintStr() + " la: " + date.dayOfWeek());
             }
             else
             {
-                Console.WriteLine("Khong hop le.");
+                Console.WriteLine("Ngay " + date.PrintStr() + " khong hop le.");
             }
             return 0;
         }
@@ -429,7 +448,7 @@ namespace LAB01_IT008
     {
         static public int exec()
         {
-            Console.WriteLine("============Running BAI06 subtask============");
+            Console.WriteLine("\n\n============Running BAI06 subtask============");
             int rows = InputHelper.ParseInput("Nhap so hang: ", false, false);
             int cols = InputHelper.ParseInput("Nhap so cot: ", false, false);
 
@@ -450,7 +469,7 @@ namespace LAB01_IT008
             Console.WriteLine("Tong cac phan tu khong phai so nguyen to: " + mat.sumOfNonPrimeCell());
 
             // e
-            int delRow = InputHelper.ParseInput("Nhap chi so hang (0-index) can xoa: ", false, false);
+            int delRow = InputHelper.ParseInput($"Nhap chi so hang (0-index) can xoa, trong khoang [0, {rows - 1}]: ", true, false, false, 0, rows - 1);
             mat.deleteRowByIndex(delRow);
             mat.Print();
 
