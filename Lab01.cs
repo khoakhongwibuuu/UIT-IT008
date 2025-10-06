@@ -10,7 +10,6 @@ namespace LAB01_IT008
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine("Hello, World!");
             BAI01.exec();
             BAI02.exec();
             BAI03.exec();
@@ -22,13 +21,29 @@ namespace LAB01_IT008
 
     static class InputHelper
     {
-        static public int ParseInput(string message)
+        static public int ParseInput(string message, bool allowZero, bool allowNegative)
         {
             int value = 0;
+            string? input = "";
             Console.Write(message);
-            while (!int.TryParse(Console.ReadLine(), out value))
+            input = Console.ReadLine();
+            while (!int.TryParse(input ?? string.Empty, out value))
             {
-                Console.WriteLine("Input khong hop le. Hay nhap lai.");
+                Console.WriteLine("Input khong phai la so nguyen. Hay nhap lai.\n");
+                Console.Write(message);
+                input = Console.ReadLine();
+            }
+            if (!allowZero && value == 0)
+            {
+                Console.WriteLine("Input khong duoc bang 0. Hay nhap lai.\n");
+                Console.Write(message);
+                return ParseInput(message, allowZero, allowNegative);
+            }
+            if (!allowNegative && value < 0)
+            {
+                Console.WriteLine("Input khong duoc la so am. Hay nhap lai.\n");
+                Console.Write(message);
+                return ParseInput(message, allowZero, allowNegative);
             }
             return value;
         }
@@ -83,7 +98,7 @@ namespace LAB01_IT008
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    data[i, j] = InputHelper.ParseInput($"Nhap phan tu [{i},{j}]: ");
+                    data[i, j] = InputHelper.ParseInput($"Nhap phan tu [{i},{j}]: ", true, true);
                 }
             }
         }
@@ -246,16 +261,16 @@ namespace LAB01_IT008
 
         public void Input()
         {
-            day = InputHelper.ParseInput("Nhap ngay: ");
-            month = InputHelper.ParseInput("Nhap thang: ");
-            year = InputHelper.ParseInput("Nhap nam: ");
+            day = InputHelper.ParseInput("Nhap ngay: ", false, false);
+            month = InputHelper.ParseInput("Nhap thang: ", false, false);
+            year = InputHelper.ParseInput("Nhap nam: ", false, false);
         }
 
         public void SemiInput()
         {
             day = 1;
-            month = InputHelper.ParseInput("Nhap thang: ");
-            year = InputHelper.ParseInput("Nhap nam: ");
+            month = InputHelper.ParseInput("Nhap thang: ", false, false);
+            year = InputHelper.ParseInput("Nhap nam: ", false, false);
         }
 
         public int daysInMonthCount() => DaysInMonth(month, year);
@@ -311,7 +326,7 @@ namespace LAB01_IT008
         static public int exec()
         {
             Console.WriteLine("============Running BAI01 subtask============");
-            int n = InputHelper.ParseInput("Nhap so nguyen duong n: ");
+            int n = InputHelper.ParseInput("Nhap so nguyen duong n: ", false, false);
             int[] arr = new int[n];
             for (int i = 0; i < n; i++)
             {
@@ -345,7 +360,7 @@ namespace LAB01_IT008
         static public int exec()
         {
             Console.WriteLine("============Running BAI02 subtask============");
-            int n = InputHelper.ParseInput("Nhap so nguyen duong n: ");
+            int n = InputHelper.ParseInput("Nhap so nguyen duong n: ", false, false);
 
             Console.WriteLine("Tong cac so nguyen to < n: " + sumPrimeLessThanN(n));
             return 0;
@@ -415,8 +430,8 @@ namespace LAB01_IT008
         static public int exec()
         {
             Console.WriteLine("============Running BAI06 subtask============");
-            int rows = InputHelper.ParseInput("Nhap so hang: ");
-            int cols = InputHelper.ParseInput("Nhap so cot: ");
+            int rows = InputHelper.ParseInput("Nhap so hang: ", false, false);
+            int cols = InputHelper.ParseInput("Nhap so cot: ", false, false);
 
             Matrix mat = new Matrix(rows, cols);
             mat.Random();
@@ -435,7 +450,7 @@ namespace LAB01_IT008
             Console.WriteLine("Tong cac phan tu khong phai so nguyen to: " + mat.sumOfNonPrimeCell());
 
             // e
-            int delRow = InputHelper.ParseInput("Nhap chi so hang (0-index) can xoa: ");
+            int delRow = InputHelper.ParseInput("Nhap chi so hang (0-index) can xoa: ", false, false);
             mat.deleteRowByIndex(delRow);
             mat.Print();
 
