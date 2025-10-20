@@ -774,6 +774,7 @@ namespace LAB02_IT008
              */
             public void PrintKhuDatOrNhaPho()
             {
+                bool found = false;
                 for (int i = 0; i < this.size; i++)
                 {
                     if (this.data[i].type == 1 && this.data[i].area >= 100)
@@ -781,6 +782,7 @@ namespace LAB02_IT008
                         Console.WriteLine($"\tKhu dat {i}:");
                         Console.WriteLine($"\t\tLoai khu dat: Khu dat trong");
                         this.data[i].Print();
+                        found = true;
                     }   
                     else if (this.data[i].type == 2)
                     {
@@ -790,8 +792,13 @@ namespace LAB02_IT008
                             Console.WriteLine($"\tKhu dat {i}:");
                             Console.WriteLine($"\t\tLoai khu dat: Nha pho");
                             this.data[i].Print();
+                            found = true;
                         }
                     }
+                }
+                if (!found)
+                {
+                    Console.WriteLine("\tKhong tim thay.");
                 }
             }
             public void PrintNhaPhoOrChungCu(string? location, long priceLimit, double areaLimit)
@@ -827,7 +834,7 @@ namespace LAB02_IT008
                 }
                 if (!found)
                 {
-                    Console.WriteLine("\tKhong tim thay Nha pho hay Chung cu nao phu hop.");
+                    Console.WriteLine("\tKhong tim thay.");
                 }
             }
         }
