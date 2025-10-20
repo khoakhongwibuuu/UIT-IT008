@@ -265,6 +265,7 @@ namespace LAB02_IT008
          */
         public void PrintPrimeCell()
         {
+            bool found = false;
             for (int i = 0; i < this.Rows; i++)
             {
                 for (int j = 0; j < this.Cols; j++)
@@ -272,8 +273,13 @@ namespace LAB02_IT008
                     if (MathHelper.isPrime(this.Data[i, j]))
                     {
                         Console.WriteLine($"Phan tu nguyen to tai vi tri ({i},{j}): {this.Data[i, j]}");
+                        found = true;
                     }
                 }
+            }
+            if (!found)
+            {
+                Console.WriteLine("Khong co phan tu nguyen to trong ma tran.");
             }
         }
         /**
@@ -619,7 +625,7 @@ namespace LAB02_IT008
             Console.Write("Hieu hai phan so: ");
             Fraction diff = frac1.Subtract(frac2);
             diff.Print();
-            Console.Write("Phan so thu 1: ");
+            Console.Write("Tich hai phan so: ");
             Fraction prod = frac1.Multiply(frac2);
             prod.Print();
             Console.Write("Thuong hai phan so: ");
